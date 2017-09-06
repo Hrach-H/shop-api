@@ -1,0 +1,14 @@
+{
+  "name": "ShopAPI",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.0"
+  }
+}
