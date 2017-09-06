@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const patcher = require('mongoose-json-patch');
 
 const ProductSchema = new Schema({
     name: {
@@ -20,6 +21,8 @@ const ProductSchema = new Schema({
         type: String
     }
 });
+
+ProductSchema.plugin(patcher);
 
 const Products = mongoose.model('product', ProductSchema);
 

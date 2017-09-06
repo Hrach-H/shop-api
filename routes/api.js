@@ -15,4 +15,26 @@ router.post('/products', function(req, res, next) {
    }).catch(next);
 });
 
+// router.patch('/products/:id', function(req, res, next) {
+//     Products.findOne({_id: req.params.id}).then(function (response) {
+//         var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[Object.keys(req.body)[0]]}  ];
+//         response.patch(patches, function callback(err) {
+//             if (err) return next(err);
+//             res.send(response);
+//         });
+//     });
+// });
+
+router.patch('/products/', function(req, res, next) {
+    for (var productId in req.body) {
+        Products.findOne({_id: productId}).then(function (response) {
+            var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[productId].availableQuantity}  ];
+            response.patch(patches, function callback(err) {
+                if (err) return next(err);
+                res.send(response);
+            });
+        });
+    }
+});
+
 module.exports = router;

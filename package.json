@@ -6,7 +6,8 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
-    "mongoose": "^4.11.10"
+    "mongoose": "^4.11.10",
+    "mongoose-json-patch": "^1.1.1"
   },
   "devDependencies": {
     "nodemon": "^1.12.0"
