@@ -26,16 +26,18 @@ router.post('/products', function(req, res, next) {
 // });
 
 router.patch('/products/', function(req, res, next) {
-    res.header('Access-Control-Allow-Methods', 'PATCH');
+    // res.header('Access-Control-Allow-Methods', 'PATCH');
+    var finalResponse;
     for (var productId in req.body) {
         Products.findOne({_id: productId}).then(function (response) {
             var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[productId].availableQuantity}  ];
-            response.patch(patches, function callback(err) {
+             response.patch(patches, function callback(err) {
                 if (err) return next(err);
-                res.send(response);
             });
+             finalResponse = response;
         });
     }
+    res.send(finalResponse);
 });
 
 module.exports = router;
