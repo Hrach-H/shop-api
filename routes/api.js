@@ -26,6 +26,7 @@ router.post('/products', function(req, res, next) {
 // });
 
 router.patch('/products/', function(req, res, next) {
+    res.header('Access-Control-Allow-Methods', 'PATCH');
     for (var productId in req.body) {
         Products.findOne({_id: productId}).then(function (response) {
             var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[productId].availableQuantity}  ];
