@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Products = require('../models/products');
+const Users = require('../models/users');
+
+/* ------------- PRODUCTS ------------- */
 
 router.get('/products', function(req, res, next) {
    Products.find({}).then(function (products) {
@@ -39,5 +42,17 @@ router.patch('/products/', function(req, res, next) {
     }
     res.send(finalResponse);
 });
+
+/* ------------- PRODUCTS END ------------- */
+
+/* ------------- USERS ------------- */
+
+router.post('/users', function(req, res, next) {
+    Users.create(req.body).then(function(result) {
+        res.send(result);
+    }).catch(next)
+});
+
+/* ------------- USERS END ------------- */
 
 module.exports = router;
