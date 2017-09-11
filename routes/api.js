@@ -48,9 +48,20 @@ router.patch('/products/', function(req, res, next) {
 /* ------------- USERS ------------- */
 
 router.post('/users', function(req, res, next) {
-    Users.create(req.body).then(function(result) {
-        res.send(result);
-    }).catch(next)
+
+    // Validation for email
+    req.checkBody('email', 'Email is required').isEmail();
+
+    req.getValidationResult()
+        .then(result => {
+            if (!result.array().length) {
+                Users.create(req.body).then(function(result) {
+                    res.send(result);
+                })
+            } else {
+                res.send('The e-mail you entered is not correct');
+            }
+        }).catch(next);
 });
 
 /* ------------- USERS END ------------- */
