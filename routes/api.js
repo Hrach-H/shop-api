@@ -6,16 +6,14 @@ const Users = require('../models/users');
 /* ------------- PRODUCTS ------------- */
 
 router.get('/products', function(req, res, next) {
-   Products.find({}).then(function (products) {
+   Products.find({}).then(products => {
        res.header('Access-Control-Allow-Origin', '*');
        res.send(products);
-   })
+   }).catch(next());
 });
 
 router.post('/products', function(req, res, next) {
-   Products.create(req.body).then(function(result) {
-       res.send(result);
-   }).catch(next);
+   Products.create(req.body).then(result => res.send(result) ).catch(next());
 });
 
 // router.patch('/products/:id', function(req, res, next) {
@@ -32,7 +30,7 @@ router.patch('/products/', function(req, res, next) {
     // res.header('Access-Control-Allow-Methods', 'PATCH');
     var finalResponse;
     for (var productId in req.body) {
-        Products.findOne({_id: productId}).then(function (response) {
+        Products.findOne({_id: productId}).then(response => {
             var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[productId].availableQuantity}  ];
              response.patch(patches, function callback(err) {
                 if (err) return next(err);
@@ -61,7 +59,7 @@ router.post('/users', function(req, res, next) {
             } else {
                 res.send('The e-mail you entered is not correct');
             }
-        }).catch(next);
+        }).catch(next());
 });
 
 /* ------------- USERS END ------------- */
