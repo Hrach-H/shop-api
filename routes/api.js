@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Products = require('../models/products');
 const Users = require('../models/users');
+const { check, validationResult } = require('express-validator/check');
 
 /* ------------- PRODUCTS ------------- */
 
@@ -46,21 +47,18 @@ router.patch('/products/', function(req, res, next) {
 
 /* ------------- USERS ------------- */
 
-router.post('/users', function(req, res, next) {
+router.post('/users', [check('email').isEmail()], function(req, res, next) {
 
     // Validation for email
-    req.checkBody('email', 'Email is required').isEmail();
+    const errors = validationResult(req);
+    if (!errors.array().length) {
+        Users.findOne({email: req.body.email}).then((response) => {
+            response ? res.status(400).send({message: 'The email is already in use'}) : Users.create(req.body).then( result => res.send(result) );
+        })
+    } else {
+        res.send('The e-mail you entered is not correct');
+    }
 
-    req.getValidationResult()
-        .then(result => {
-            if (!result.array().length) {
-                Users.findOne({email: req.body.email}).then((response) => {
-                    response ? res.status(400).send({message: 'The email is already in use'}) : Users.create(req.body).then( result => res.send(result) );
-                })
-            } else {
-                res.send('The e-mail you entered is not correct');
-            }
-        }).catch(next);
 });
 
 /* ------------- USERS END ------------- */

@@ -1,5 +1,4 @@
 const express = require('express'),
-    expressValidator = require('express-validator'),
     expressSession = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -17,9 +16,6 @@ mongoose.Promise = global.Promise;
 
 app.use(cors());
 app.use(bodyParser.json());
-
-// Express validator
-app.use(expressValidator());
 
 app.use('/api', require('./routes/api'));
 
