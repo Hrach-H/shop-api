@@ -9,11 +9,12 @@ router.get('/products', function(req, res, next) {
    Products.find({}).then(products => {
        res.header('Access-Control-Allow-Origin', '*');
        res.send(products);
-   }).catch(next());
+   })
+       .catch(next);
 });
 
 router.post('/products', function(req, res, next) {
-   Products.create(req.body).then(result => res.send(result) ).catch(next());
+   Products.create(req.body).then(result => res.send(result) ).catch(next);
 });
 
 // router.patch('/products/:id', function(req, res, next) {
@@ -59,7 +60,7 @@ router.post('/users', function(req, res, next) {
             } else {
                 res.send('The e-mail you entered is not correct');
             }
-        }).catch(next());
+        }).catch(next);
 });
 
 /* ------------- USERS END ------------- */
