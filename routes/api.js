@@ -53,7 +53,6 @@ router.post('/users', [
     check('passConfirm', 'Password confirmation field must have the same value as the password').exists().custom((value, { req }) => value === req.body.password)
 ], function(req, res, next) {
 
-    // Validation for email
     const errors = validationResult(req);
     if (!errors.array().length) {
         Users.findOne({email: req.body.email}).then((response) => {
