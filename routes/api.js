@@ -47,7 +47,11 @@ router.patch('/products/', function(req, res, next) {
 
 /* ------------- USERS ------------- */
 
-router.post('/users', [check('email').isEmail()], function(req, res, next) {
+router.post('/users', [
+    check('email').isEmail(),
+    check('password', 'Password must be at least 5 char long').isLength({ min: 5}),
+    check('passConfirm', 'Password confirmation field must have the same value as the password').exists().custom((value, { req }) => value === req.body.password)
+], function(req, res, next) {
 
     // Validation for email
     const errors = validationResult(req);
@@ -56,7 +60,11 @@ router.post('/users', [check('email').isEmail()], function(req, res, next) {
             response ? res.status(400).send({message: 'The email is already in use'}) : Users.create(req.body).then( result => res.send(result) );
         })
     } else {
-        res.send('The e-mail you entered is not correct');
+        let errs = [];
+        for (let error of errors.array()) {
+            errs.push(error.param + ': ' +error.msg);
+        }
+        res.status(400).send({message: errs.join(', ')});
     }
 
 });
