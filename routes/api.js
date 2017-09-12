@@ -55,8 +55,8 @@ router.post('/users', function(req, res, next) {
     req.getValidationResult()
         .then(result => {
             if (!result.array().length) {
-                Users.create(req.body).then(function(result) {
-                    res.send(result);
+                Users.findOne({email: req.body.email}).then((response) => {
+                    response ? res.send('The email is already in use') : Users.create(req.body).then( result => res.send(result) );
                 })
             } else {
                 res.send('The e-mail you entered is not correct');
