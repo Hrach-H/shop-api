@@ -3,6 +3,7 @@ const router = express.Router();
 const Products = require('../models/products');
 const Users = require('../models/users');
 const { check, validationResult } = require('express-validator/check');
+const moment = require('moment');
 
 /* ------------- PRODUCTS ------------- */
 
@@ -51,6 +52,12 @@ router.post('/users', [
     check('firstName', 'Invalid First Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('lastName', 'Invalid Last Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('email', 'Invalid e-mail').isEmail(),
+    check('birthDate', 'Invalid date of birth').exists().custom( value => {
+        const date = new Date(value).getTime();
+        const today = new Date().getTime();
+        const diff = moment.duration(today - date).asYears();
+        return diff >= 18
+    } ),
     check('password', 'Password must be at least 5 char long').isLength({ min: 5}),
     check('passConfirm', 'Password confirmation field must have the same value as the password').exists().custom((value, { req }) => value === req.body.password)
 ], function(req, res, next) {

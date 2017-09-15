@@ -9,6 +9,7 @@
     "express": "^4.15.4",
     "express-session": "^1.15.5",
     "express-validator": "^4.1.1",
+    "moment": "^2.18.1",
     "mongoose": "^4.11.10",
     "mongoose-json-patch": "^1.1.1"
   },
