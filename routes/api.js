@@ -54,7 +54,7 @@ router.post('/users', [
     check('firstName', 'Invalid First Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('lastName', 'Invalid Last Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('email', 'Invalid e-mail').isEmail(),
-    check('birthDate', 'Invalid date of birth').exists().custom( value => {
+    check('birthDate', 'You must be 18 or older').exists().custom( value => {
         const date = new Date(value).getTime();
         const today = new Date().getTime();
         const diff = moment.duration(today - date).asYears();
