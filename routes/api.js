@@ -49,6 +49,8 @@ router.patch('/products/', function(req, res, next) {
 /* ------------- USERS ------------- */
 
 router.post('/users', [
+    // ----- VALIDATION -----
+
     check('firstName', 'Invalid First Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('lastName', 'Invalid Last Name').exists().custom((value) => /^[a-z ,.'-]+$/i.test(value)),
     check('email', 'Invalid e-mail').isEmail(),
@@ -60,6 +62,9 @@ router.post('/users', [
     } ),
     check('password', 'Password must be at least 5 char long').isLength({ min: 5}),
     check('passConfirm', 'Password confirmation field must have the same value as the password').exists().custom((value, { req }) => value === req.body.password)
+
+    // ----- VALIDATION  END -----
+
 ], function(req, res, next) {
 
     const errors = validationResult(req);
