@@ -65,7 +65,13 @@ router.post('/users', [
     const errors = validationResult(req);
     if (!errors.array().length) {
         Users.findOne({email: req.body.email}).then((response) => {
-            response ? res.status(400).send({message: 'The email is already in use'}) : Users.create(req.body).then( result => res.send(result) );
+            if (response) {
+                res.status(400).send({message: 'The email is already in use'});
+            } else {
+                const user = req.body;
+                delete user.passConfirm;
+                Users.create(user).then( result => res.send(result) );
+            }
         })
     } else {
         let errs = [];
