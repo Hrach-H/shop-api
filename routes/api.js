@@ -103,7 +103,7 @@ router.post('/users', [
 
 });
 
-/* ----- PASSPORT CONFIG ------ */
+/* ----- PASSPORT CONFIG ----- */
 passport.use(new LocalStrategy(
     {usernameField: 'email', passwordField: 'password'},
     function(username, password, done) {
@@ -130,7 +130,7 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-/* ----- PASSPORT CONFIG  END ------ */
+/* ----- PASSPORT CONFIG  END ----- */
 
 router.post('/login', function(req, res) {
 
@@ -140,6 +140,11 @@ router.post('/login', function(req, res) {
         if (info) res.send(info); // Unknown user & Invalid password
     })(req, res);
 
+});
+
+router.get('/logout', function(req, res) {
+    req.logout();
+    res.send('You have logged out');
 });
 
 /* ------------- USERS END ------------- */
