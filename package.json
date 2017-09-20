@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "express": "^4.15.4",
@@ -11,7 +12,9 @@
     "express-validator": "^4.1.1",
     "moment": "^2.18.1",
     "mongoose": "^4.11.10",
-    "mongoose-json-patch": "^1.1.1"
+    "mongoose-json-patch": "^1.1.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.12.0"

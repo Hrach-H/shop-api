@@ -3,6 +3,7 @@ const express = require('express'),
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const passport = require('passport');
 
 const app = express();
 
@@ -16,6 +17,7 @@ mongoose.Promise = global.Promise;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 app.use('/api', require('./routes/api'));
 

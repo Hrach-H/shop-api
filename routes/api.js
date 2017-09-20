@@ -4,6 +4,9 @@ const Products = require('../models/products');
 const Users = require('../models/users');
 const { check, validationResult } = require('express-validator/check');
 const moment = require('moment');
+const bcrypt = require('bcryptjs');
+const passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy;
 
 /* ------------- PRODUCTS ------------- */
 
@@ -73,10 +76,22 @@ router.post('/users', [
             if (response) {
                 res.status(400).send({message: 'The email is already in use'});
             } else {
-                const user = req.body;
+
+                let user = req.body;
                 delete user.passConfirm;
-                Users.create(user).then( result => res.send(result) );
+
+                // Encrypting user's password w/ bcryptjs
+                bcrypt.genSalt(10, function(err, salt) {
+                    bcrypt.hash(user.password, salt, function(err, hash) {
+                        user.password = hash;
+
+                        // Saving user to the DB
+                        Users.create(user).then( result => res.send(result) );
+                    });
+                });
+
             }
+
         })
     } else {
         let errs = [];
@@ -85,6 +100,45 @@ router.post('/users', [
         }
         res.status(400).send({message: errs.join(', ')});
     }
+
+});
+
+/* ----- PASSPORT CONFIG ------ */
+passport.use(new LocalStrategy(
+    {usernameField: 'email', passwordField: 'password'},
+    function(username, password, done) {
+        Users.findOne({email: username}).then(user => {
+            if (!user) {
+                return done(null, false, {'message': 'Unknown User'})
+            } else {
+                bcrypt.compare(password, user.password, function(err, isMatch) {
+                    if (err) throw err;
+                    return isMatch ? done(null, user) : done(null, false, {message: 'Invalid password'});
+                });
+            }
+        }).catch(err => console.log(err));
+    }
+));
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    Users.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
+
+/* ----- PASSPORT CONFIG  END ------ */
+
+router.post('/login', function(req, res) {
+
+    passport.authenticate('local', function(err, user, info) {
+        if (err) res.send(err);
+        if (user) res.send(user); // Successful authentication
+        if (info) res.send(info); // Unknown user & Invalid password
+    })(req, res);
 
 });
 
