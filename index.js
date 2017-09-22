@@ -1,6 +1,7 @@
 const express = require('express'),
-    expressSession = require('express-session');
+    session = require('express-session');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const passport = require('passport');
@@ -17,7 +18,14 @@ mongoose.Promise = global.Promise;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
+app.use(session({
+    secret: 'fhu78Sdhuh7123SDFhhasd',
+    resave: false, // Save session only whenever changes are made to the data
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/api', require('./routes/api'));
 

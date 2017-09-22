@@ -11,11 +11,14 @@ const passport = require('passport'),
 /* ------------- PRODUCTS ------------- */
 
 router.get('/products', function(req, res, next) {
-   Products.find({}).then(products => {
-       res.header('Access-Control-Allow-Origin', '*');
-       res.send(products);
-   })
-       .catch(next);
+    if (!req.user && !req.isAuthenticated()) {
+       return res.status(401).send();
+    } else {
+        Products.find({}).then(products => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.send(products);
+        }).catch(next);
+    }
 });
 
 router.post('/products', function(req, res, next) {
@@ -136,8 +139,16 @@ router.post('/login', function(req, res) {
 
     passport.authenticate('local', function(err, user, info) {
         if (err) res.send(err);
-        if (user) res.send(user); // Successful authentication
-        if (info) res.send(info); // Unknown user & Invalid password
+
+        // Successful authentication
+        if (user) {
+            req.login(user, function(err) {
+                res.redirect('/products');
+            });
+        }
+
+        // Unknown user & Invalid password
+        if (info) res.send(info);
     })(req, res);
 
 });
