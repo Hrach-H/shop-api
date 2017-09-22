@@ -3,7 +3,6 @@ const express = require('express'),
 const mongoose = require('mongoose'),
     MongoStore = require('connect-mongo')(session);
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const passport = require('passport');
 
@@ -17,9 +16,9 @@ mongoose.connection.on('connected', function() {
 });
 mongoose.Promise = global.Promise;
 
+
 app.use(cors());
 app.use(bodyParser.json());
-app.use(cookieParser());
 app.use(session({
     secret: 'fhu78Sdhuh7123SDFhhasd',
     resave: false, // Save session only whenever changes are made to the data
@@ -34,6 +33,6 @@ app.use(passport.session());
 
 app.use('/api', require('./routes/api'));
 
-app.listen(process.env.port || 4000, function() {
+app.listen(process.env.port || 3001, function() {
     console.log('Now listening for requests');
 });
