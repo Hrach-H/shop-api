@@ -143,7 +143,8 @@ router.post('/login', function(req, res) {
         // Successful authentication
         if (user) {
             req.login(user, function(err) {
-                res.redirect('./products');
+                if (err) throw err;
+                res.status(200).send({message: 'Login successful'});
             });
         }
 
