@@ -155,8 +155,15 @@ router.post('/login', function(req, res) {
 });
 
 router.get('/logout', function(req, res) {
-    req.logout();
-    res.send('You have logged out');
+    if (req.user && req.isAuthenticated()) {
+        req.logout();
+        req.session.destroy(err => {
+            if (err) throw err;
+            res.send({message: 'You have successfully logged out'});
+        });
+    } else {
+        res.status(401).send({message: 'You have to be logged in to log out'});
+    }
 });
 
 /* ------------- USERS END ------------- */
