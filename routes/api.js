@@ -12,7 +12,7 @@ const passport = require('passport'),
 
 router.get('/products', function(req, res, next) {
     if (!req.user && !req.isAuthenticated()) {
-       return res.status(401).send();
+       return res.status(401).send({message: 'User not authorized'});
     } else {
         Products.find({}).then(products => {
             res.header('Access-Control-Allow-Origin', '*');
