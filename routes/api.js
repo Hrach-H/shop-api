@@ -166,6 +166,22 @@ router.get('/logout', function(req, res) {
     }
 });
 
+// Checking if a user is authorized
+router.get('/', function(req, res) {
+   if (req.user && req.isAuthenticated()) {
+       const user = {
+           firstName: req.user.firstName,
+           lastName: req.user.lastName,
+           email: req.user.email,
+           birthDate: req.user.birthDate,
+           isLoggedIn: true
+       };
+       res.send(user);
+   } else {
+       res.status(401).send({message: 'User not authorized'});
+   }
+});
+
 /* ------------- USERS END ------------- */
 
 module.exports = router;
