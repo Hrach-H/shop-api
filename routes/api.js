@@ -144,7 +144,14 @@ router.post('/login', function(req, res) {
         if (user) {
             req.login(user, function(err) {
                 if (err) throw err;
-                res.status(200).send({message: 'Login successful'});
+                const user = {
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    email: req.user.email,
+                    birthDate: req.user.birthDate,
+                    isLoggedIn: true
+                };
+                res.send(user);
             });
         }
 
