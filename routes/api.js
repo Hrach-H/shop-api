@@ -11,14 +11,10 @@ const passport = require('passport'),
 /* ------------- PRODUCTS ------------- */
 
 router.get('/products', function(req, res, next) {
-    if (!req.user && !req.isAuthenticated()) {
-       return res.status(401).send({message: 'User not authorized'});
-    } else {
-        Products.find({}).then(products => {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.send(products);
-        }).catch(next);
-    }
+    Products.find({}).then(products => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.send(products);
+    }).catch(next);
 });
 
 router.post('/products', function(req, res, next) {
@@ -36,18 +32,25 @@ router.post('/products', function(req, res, next) {
 // });
 
 router.patch('/products/', function(req, res, next) {
-    // res.header('Access-Control-Allow-Methods', 'PATCH');
-    var finalResponse;
-    for (var productId in req.body) {
-        Products.findOne({_id: productId}).then(response => {
-            var patches = [ {op: 'replace', path: '/availableQuantity', value: req.body[productId].availableQuantity}  ];
-             response.patch(patches, function callback(err) {
-                if (err) return next(err);
+    if (!req.user && !req.isAuthenticated()) {
+        return res.status(401).send({message: 'User not authorized'});
+    } else {
+        var finalResponse;
+        for (var productId in req.body) {
+            Products.findOne({_id: productId}).then(response => {
+                var patches = [{
+                    op: 'replace',
+                    path: '/availableQuantity',
+                    value: req.body[productId].availableQuantity
+                }];
+                response.patch(patches, function callback(err) {
+                    if (err) return next(err);
+                });
+                finalResponse = response;
             });
-             finalResponse = response;
-        });
+        }
+        res.send(finalResponse);
     }
-    res.send(finalResponse);
 });
 
 /* ------------- PRODUCTS END ------------- */
