@@ -66,8 +66,8 @@ router.post('/users', [
     check('birthDate', 'You must be 18 or older').exists().custom( value => {
         const date = new Date(value).getTime();
         const today = new Date().getTime();
-        const diff = moment.duration(today - date).asYears();
-        return diff >= 18
+        const diff = parseFloat(moment.duration(today - date).asYears());
+        return diff.toFixed(3) > 18 // we need toFixed(3) so that it takes into account current day
     } ),
     check('password', 'Password must be at least 5 char long').isLength({ min: 5}),
     check('passConfirm', 'Password confirmation field must have the same value as the password').exists().custom((value, { req }) => value === req.body.password)
